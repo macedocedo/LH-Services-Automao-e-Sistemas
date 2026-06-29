@@ -17,7 +17,13 @@
     --white: #F0F0F0;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+  }
 
   body {
     font-family: 'Segoe UI', system-ui, sans-serif;
@@ -119,7 +125,7 @@
 
   /* HERO */
   .hero {
-    min-height: 95vh;
+    min-height: 98vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -322,25 +328,28 @@
   }
   .section-title em { color: var(--yellow); font-style: normal; }
 
+  /* ── ACCORDION: 1 coluna, 1 card aberto por vez ── */
   .services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 0.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
     border: 1px solid rgba(253, 208, 7, 0.726);
+    border-radius: 4px;
+    overflow: hidden;
   }
 
-  /* ───────── CARD EXPANDÍVEL ───────── */
   .service-card {
     background: var(--dark);
-    padding: 1rem 2rem;
+    padding: 1.2rem 2rem;
     position: relative;
     overflow: hidden;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: background 0.3s, opacity 0.5s, transform 0.5s;
     opacity: 0;
     transform: translateY(20px);
-    transition: opacity 0.5s, transform 0.5s, background 0.3s;
+    border-bottom: 1px solid rgba(253, 208, 7, 0.15);
   }
+  .service-card:last-child { border-bottom: none; }
   .service-card.visible { opacity: 1; transform: translateY(0); }
 
   /* barra lateral amarela */
@@ -361,22 +370,21 @@
   /* cabeçalho sempre visível */
   .card-header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: 1rem;
   }
 
   .card-header-left {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 0.9rem;
     flex: 1;
   }
 
   .service-icon {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     flex-shrink: 0;
-    margin-top: 2px;
   }
 
   .service-title {
@@ -400,8 +408,7 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    transition: background 0.25s, border-color 0.25s, transform 0.35s;
-    margin-top: 2px;
+    transition: background 0.25s, border-color 0.25s;
   }
   .card-toggle svg {
     width: 14px;
@@ -416,17 +423,6 @@
   .service-card.expanded .card-toggle svg {
     transform: rotate(180deg);
   }
-
-  /* hint "clique para ver mais" */
-  .card-hint {
-    font-size: 0.7rem;
-    color: var(--gray);
-    letter-spacing: 0.08em;
-    margin-top: 0.7rem;
-    opacity: 1;
-    transition: opacity 0.25s;
-  }
-  .service-card.expanded .card-hint { opacity: 0; height: 0; margin: 0; overflow: hidden; }
 
   /* conteúdo colapsável */
   .card-body {
@@ -447,6 +443,7 @@
     font-size: 0.9rem;
     line-height: 1.7;
     margin-bottom: 1.2rem;
+    max-width: 700px;
   }
 
   .service-features {
@@ -619,11 +616,18 @@
     .nav-links, .nav-cta { display: none; }
     .hamburger { display: flex; }
     .why-grid { grid-template-columns: 1fr; }
-    .services-grid { grid-template-columns: 1fr; }
     #contato > div > div[style*="grid-template-columns"] {
       grid-template-columns: 1fr !important;
     }
   }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+    -webkit-touch-callout: none;
+  }
+
+
 </style>
 </head>
 <body>
@@ -637,8 +641,8 @@
     </div>
   </a>
   <ul class="nav-links">
-    <li><a href="#servicos">Serviços</a></li>
     <li><a href="#diferenciais">Diferenciais</a></li>
+    <li><a href="#servicos">Serviços</a></li>
     <li><a href="#contato">Contato</a></li>
   </ul>
   <a href="https://wa.me/5519992082112?text=Olá! Quero um orçamento." class="nav-cta" target="_blank">Orçamento →</a>
@@ -648,8 +652,8 @@
 </nav>
 
 <div class="mobile-menu" id="mobileMenu">
-  <a href="#servicos" onclick="toggleMenu()">Serviços</a>
   <a href="#diferenciais" onclick="toggleMenu()">Diferenciais</a>
+  <a href="#servicos" onclick="toggleMenu()">Serviços</a>
   <a href="#contato" onclick="toggleMenu()">Contato</a>
   <a href="https://wa.me/5519992082112" target="_blank" style="color: var(--yellow);">📲 Solicitar Orçamento</a>
 </div>
@@ -673,7 +677,6 @@
     <div class="hero-visual">
       <div class="hero-logo-wrap">
         <div class="hero-logo-glow"></div>
-          
         <div style="font-size:8rem; position:relative; z-index:2; filter:drop-shadow(0 0 30px rgba(245,200,0,0.4)); animation: float 4s ease-in-out infinite;"><img src="./img/logo.png" alt="Logo da empresa" class="hero-logo"></div>
       </div>
     </div>
@@ -702,356 +705,7 @@
   </div>
 </div>
 
-<!-- SERVICES -->
-<section id="servicos">
-  <div class="section-head">
-    <div class="section-eyebrow">Nossos Serviços</div>
-    <h2 class="section-title">O que a <em>LH Services</em> faz por você</h2>
-    <p style="color:var(--gray); font-size:0.85rem; margin-top:0.6rem;">Clique em qualquer card para ver os detalhes do serviço.</p>
-  </div>
 
-  <div class="services-grid">
-
-    <!-- CARD 1 -->
-    <div class="service-card" onclick="toggleCard(this)">
-      <div class="card-header">
-        <div class="card-header-left">
-          <span class="service-icon">💡</span>
-          <h3 class="service-title">Instalação de Iluminação de Alto Padrão</h3>
-        </div>
-        <div class="card-toggle">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
-      </div>
-      <div class="card-hint"></div>
-      <div class="card-body">
-        <p class="service-desc">Executamos seu projeto luminotécnico com precisão milimétrica. Especialistas em soluções modernas para residências de alto padrão e comércios de luxo.</p>
-        <ul class="service-features">
-          <li>Perfis de LED – corte e instalação embutida em gesso ou marcenaria</li>
-          <li>Trilhos Eletrificados – montagem de sistemas lineares e spots de design</li>
-          <li>Automação – interruptores inteligentes e sistemas dimerizáveis</li>
-          <li>Fitas LED – colagem perfeita com luz indireta e uniforme</li>
-        </ul>
-        <a href="https://wa.me/5519992082112?text=Olá! Gostaria de um orçamento para iluminação de alto padrão." class="service-cta" target="_blank" onclick="event.stopPropagation()">Solicitar Orçamento →</a>
-      </div>
-    </div>
-
-    <!-- CARD 2 -->
-    <div class="service-card" onclick="toggleCard(this)">
-      <div class="card-header">
-        <div class="card-header-left">
-          <span class="service-icon">⚡</span>
-          <h3 class="service-title">Instalações Elétricas Residenciais e Prediais</h3>
-        </div>
-        <div class="card-toggle">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
-      </div>
-      <div class="card-hint"></div>
-      <div class="card-body">
-        <p class="service-desc">Serviços elétricos profissionais com foco em segurança, economia e normas técnicas (NBR 5410). Desde pequenos reparos até projetos elétricos completos.</p>
-        <ul class="service-features">
-          <li>Quadros de energia, fiação, tomadas e interruptores</li>
-          <li>Projetos de iluminação LED, lustres, luminárias e refletores</li>
-          <li>Aterramento e dispositivos de proteção (DR e DPS)</li>
-          <li>Passagem de fiação, eletrodutos e organização de circuitos</li>
-        </ul>
-        <a href="https://wa.me/5519992082112?text=Olá! Gostaria de um orçamento para instalações elétricas." class="service-cta" target="_blank" onclick="event.stopPropagation()">Solicitar Orçamento →</a>
-      </div>
-    </div>
-
-    <!-- CARD 3 -->
-    <div class="service-card" onclick="toggleCard(this)">
-      <div class="card-header">
-        <div class="card-header-left">
-          <span class="service-icon">🚧</span>
-          <h3 class="service-title">Instalação de Portão Eletrônico PPA – Linha Rápida</h3>
-        </div>
-        <div class="card-toggle">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
-      </div>
-      <div class="card-hint"></div>
-      <div class="card-body">
-        <p class="service-desc">Garanta a segurança da sua família com a tecnologia líder de mercado! Instalamos toda a linha de motores PPA, conhecidos pela durabilidade e abertura ultrarrápida.</p>
-        <ul class="service-features">
-          <li>Abertura em até 4 segundos – linha Rápida</li>
-          <li>Sistema anti-esmagamento e travamento eletrônico</li>
-          <li>Acionamento por controle remoto ou smartphone (opcional)</li>
-          <li>Motor, cremalheiras, 2 controles configurados + garantia</li>
-        </ul>
-        <a href="https://wa.me/5519992082112?text=Olá! Gostaria de um orçamento para portão eletrônico PPA." class="service-cta" target="_blank" onclick="event.stopPropagation()">Pedir Orçamento Grátis →</a>
-      </div>
-    </div>
-
-    <!-- CARD 4 -->
-    <div class="service-card" onclick="toggleCard(this)">
-      <div class="card-header">
-        <div class="card-header-left">
-          <span class="service-icon">🔐</span>
-          <h3 class="service-title">Instalação de Controle de Acesso</h3>
-        </div>
-        <div class="card-toggle">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
-      </div>
-      <div class="card-hint"></div>
-      <div class="card-body">
-        <p class="service-desc">Diga adeus às chaves e tenha controle total de quem entra e sai! Instalamos sistemas modernos de controle de acesso para residências, empresas e condomínios.</p>
-        <ul class="service-features">
-          <li>Biometria, senha numérica, cartão/tag e reconhecimento facial</li>
-          <li>Relatórios de entradas e saídas em tempo real</li>
-          <li>Integração com alarmes e câmeras de segurança</li>
-          <li>Liberação de visitantes por aplicativo ou QR Code</li>
-          <li>Instalação completa, configuração e treinamento dos usuários</li>
-        </ul>
-        <a href="https://wa.me/5519992082112?text=Olá! Gostaria de um orçamento para Controle de Acesso." class="service-cta" target="_blank" onclick="event.stopPropagation()">Pedir Orçamento Grátis →</a>
-      </div>
-    </div>
-
-    <!-- CARD 5 -->
-    <div class="service-card" onclick="toggleCard(this)">
-      <div class="card-header">
-        <div class="card-header-left">
-          <span class="service-icon">🌐</span>
-          <h3 class="service-title">Cabeamento Estruturado e Montagem de Rack</h3>
-        </div>
-        <div class="card-toggle">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
-      </div>
-      <div class="card-hint"></div>
-      <div class="card-body">
-        <p class="service-desc">Soluções completas em conectividade para empresas e residências. Projetamos e executamos redes organizadas, rápidas e preparadas para expansão.</p>
-        <ul class="service-features">
-          <li>Montagem e organização de racks, patch panels e switches</li>
-          <li>Instalação de pontos de rede RJ45</li>
-          <li>Identificação e certificação dos cabos</li>
-          <li>Configuração de roteadores e Access Points</li>
-          <li>Infraestrutura para redes e sistemas de CFTV IP</li>
-        </ul>
-        <a href="https://wa.me/5519992082112?text=Olá! Gostaria de um orçamento para Cabeamento Estruturado." class="service-cta" target="_blank" onclick="event.stopPropagation()">Pedir Orçamento Grátis →</a>
-      </div>
-    </div>
-
-    <!-- CARD 6 -->
-    <div class="service-card" onclick="toggleCard(this)">
-      <div class="card-header">
-        <div class="card-header-left">
-          <span class="service-icon">⚡</span>
-          <h3 class="service-title">Infraestrutura Elétrica, Rede e CFTV</h3>
-        </div>
-        <div class="card-toggle">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
-      </div>
-      <div class="card-hint"></div>
-      <div class="card-body">
-        <p class="service-desc">Executamos toda a infraestrutura necessária para sistemas elétricos, redes de dados e CFTV, garantindo organização, segurança e alto desempenho.</p>
-        <ul class="service-features">
-          <li>Instalação de eletrodutos, canaletas e caixas de passagem</li>
-          <li>Lançamento de cabos Cat5e e Cat6</li>
-          <li>Infraestrutura para câmeras e equipamentos de segurança</li>
-          <li>Organização e separação entre cabos de energia e dados</li>
-          <li>Projetos para obras novas e reformas</li>
-        </ul>
-        <a href="https://wa.me/5519992082112?text=Olá! Gostaria de um orçamento para Infraestrutura Elétrica e Rede." class="service-cta" target="_blank" onclick="event.stopPropagation()">Pedir Orçamento Grátis →</a>
-      </div>
-    </div>
-
-    <!-- CARD 7 -->
-    <div class="service-card" onclick="toggleCard(this)">
-      <div class="card-header">
-        <div class="card-header-left">
-          <span class="service-icon">📹</span>
-          <h3 class="service-title">Instalação de CFTV</h3>
-        </div>
-        <div class="card-toggle">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
-      </div>
-      <div class="card-hint"></div>
-      <div class="card-body">
-        <p class="service-desc">Proteja seu patrimônio com um sistema moderno de monitoramento por câmeras. Tenha acesso às imagens em tempo real de qualquer lugar.</p>
-        <ul class="service-features">
-          <li>Instalação de câmeras IP, analógicas e Wi-Fi</li>
-          <li>Visualização pelo celular, tablet ou computador</li>
-          <li>Gravação em DVR, NVR ou nuvem</li>
-          <li>Câmeras com visão noturna e alta resolução</li>
-          <li>Manutenção e reposicionamento de câmeras existentes</li>
-        </ul>
-        <a href="https://wa.me/5519992082112?text=Olá! Gostaria de um orçamento para Instalação de CFTV." class="service-cta" target="_blank" onclick="event.stopPropagation()">Pedir Orçamento Grátis →</a>
-      </div>
-    </div>
-
-    <!-- CARD 8 -->
-    <div class="service-card" onclick="toggleCard(this)">
-      <div class="card-header">
-        <div class="card-header-left">
-          <span class="service-icon">🚨</span>
-          <h3 class="service-title">Instalação de Sistema de Alarme</h3>
-        </div>
-        <div class="card-toggle">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
-      </div>
-      <div class="card-hint"></div>
-      <div class="card-body">
-        <p class="service-desc">Instalação profissional de sistemas de alarme com proteção completa para casas, comércios e condomínios. Alarmes monitorados por aplicativo e sensores de última geração.</p>
-        <ul class="service-features">
-          <li>Proteção para residências, comércios e condomínios</li>
-          <li>Monitoramento remoto via aplicativo</li>
-          <li>Sensores de última geração</li>
-          <li>Suporte técnico especializado</li>
-        </ul>
-        <a href="https://wa.me/5519992082112?text=Olá! Gostaria de solicitar um orçamento para instalação de sistema de alarme." class="service-cta" target="_blank" onclick="event.stopPropagation()">Solicitar Orçamento →</a>
-      </div>
-    </div>
-
-    <!-- CARD 9 -->
-    <div class="service-card" onclick="toggleCard(this)">
-      <div class="card-header">
-        <div class="card-header-left">
-          <span class="service-icon">🚿</span>
-          <h3 class="service-title">Instalação de Chuveiro Elétrico</h3>
-        </div>
-        <div class="card-toggle">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
-      </div>
-      <div class="card-hint"></div>
-      <div class="card-body">
-        <p class="service-desc">Evite riscos com instalações mal feitas e garanta um banho quente e seguro! Realizamos a instalação técnica com acabamento profissional.</p>
-        <ul class="service-features">
-          <li>Fixação do aparelho, conexão hidráulica sem vazamentos</li>
-          <li>Verificação da fiação e conectores (evita derretimentos e curtos)</li>
-          <li>Teste de funcionamento e vedação na hora</li>
-        </ul>
-        <div class="service-price">
-          R$ 170,00
-          <small>Mão de obra por unidade. Não inclui aparelho.</small>
-        </div>
-        <a href="https://wa.me/5519992082112?text=Olá! Gostaria de um orçamento para instalação de chuveiro elétrico." class="service-cta" target="_blank" onclick="event.stopPropagation()">Agendar Instalação →</a>
-      </div>
-    </div>
-
-    <!-- CARD 10 -->
-    <div class="service-card" onclick="toggleCard(this)">
-      <div class="card-header">
-        <div class="card-header-left">
-          <span class="service-icon">🌀</span>
-          <h3 class="service-title">Instalação de Ventilador de Teto</h3>
-        </div>
-        <div class="card-toggle">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
-      </div>
-      <div class="card-hint"></div>
-      <div class="card-body">
-        <p class="service-desc">Garanta um ambiente fresco com uma instalação segura e sem barulhos indesejados! Realizamos a montagem e fixação completa do seu ventilador de teto.</p>
-        <ul class="service-features">
-          <li>Montagem de pás, motor e kit de iluminação</li>
-          <li>Fixação reforçada no teto – sem vibrações ou balanço</li>
-          <li>Instalação do capacitor e interruptor de controle de velocidade</li>
-          <li>Teste de balanceamento e todas as funções</li>
-        </ul>
-        <div class="service-price">
-          R$ 170 – R$ 250
-          <small>Varia conforme modelo e altura do pé-direito.</small>
-        </div>
-        <a href="https://wa.me/5519992082112?text=Olá! Gostaria de agendar a instalação de um ventilador de teto." class="service-cta" target="_blank" onclick="event.stopPropagation()">Agendar Instalação →</a>
-      </div>
-    </div>
-
-    <!-- CARD 11 -->
-    <div class="service-card" onclick="toggleCard(this)">
-      <div class="card-header">
-        <div class="card-header-left">
-          <span class="service-icon">🔌</span>
-          <h3 class="service-title">Pontos de Rede e Cabeamento Estruturado</h3>
-        </div>
-        <div class="card-toggle">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
-      </div>
-      <div class="card-hint"></div>
-      <div class="card-body">
-        <p class="service-desc">Soluções completas em conectividade e infraestrutura de rede para sua empresa ou residência. Projetamos e executamos o cabeamento com foco em organização e velocidade.</p>
-        <ul class="service-features">
-          <li>Montagem, fixação e organização de Racks, Patch Panels e Switches</li>
-          <li>Instalação de pontos de rede (RJ45) para computadores, Smart TVs e impressoras</li>
-          <li>Identificação e certificação de todos os pontos e fiações</li>
-          <li>Configuração de roteadores e Access Points</li>
-          <li>Cabeamento estruturado para câmeras IP e sistemas de segurança</li>
-        </ul>
-        <a href="https://wa.me/5519992082112?text=Olá! Gostaria de solicitar um orçamento para instalação de cabeamento estruturado." class="service-cta" target="_blank" onclick="event.stopPropagation()">Solicitar Orçamento →</a>
-      </div>
-    </div>
-
-    <!-- CARD 12 -->
-    <div class="service-card" onclick="toggleCard(this)">
-      <div class="card-header">
-        <div class="card-header-left">
-          <span class="service-icon">⚡</span>
-          <h3 class="service-title"> Instalação de Cerca Elétrica</h3>
-        </div>
-        <div class="card-toggle">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
-      </div>
-      <div class="card-hint"></div>
-      <div class="card-body">
-        <p class="service-desc">Instalação e manutenção de cerca elétrica profissional. Proteja o perímetro do seu imóvel com a barreira de segurança mais eficiente do mercado.</p>
-        <ul class="service-features">
-          <li>Central de choque de alta performance – choque forte (não letal)</li>
-          <li>Hastes de alumínio ou inox com alta durabilidade</li>
-          <li>Alarme integrado: sirene dispara se o fio for cortado ou tocado</li>
-          <li>Bateria estacionária – funciona mesmo sem energia elétrica</li>
-          <li>Instalação dentro das normas técnicas e legais</li>
-        </ul>
-        <a href="https://wa.me/5519992082112?text=Olá! Gostaria de solicitar um orçamento para instalação de cerca elétrica." class="service-cta" target="_blank" onclick="event.stopPropagation()">Solicitar Orçamento →</a>
-      </div>
-    </div>
-
-    <!-- CARD CTA -->
-
-
-  </div>
-</section>
-
-<!-- CTA BAND -->
-<div class="cta-band">
-  <div class="cta-band-inner">
-    <h2>Segurança elétrica não é luxo é obrigação.</h2>
-    <p>Não arrisque a vida da sua família ou o seu patrimônio. Chame os especialistas e tenha tranquilidade.</p>
-  </div>
-</div>
-
-<!-- WHY US -->
 <section id="diferenciais">
   <div class="section-head">
     <div class="section-eyebrow">Por que escolher a LH</div>
@@ -1091,6 +745,342 @@
   </div>
 </section>
 
+
+<!-- SERVICES -->
+<section id="servicos">
+  <div class="section-head">
+    <div class="section-eyebrow">Nossos Serviços</div>
+    <h2 class="section-title">O que a <em>LH Services</em> faz por você</h2>
+    <p style="color:var(--gray); font-size:0.85rem; margin-top:0.6rem;">Clique em qualquer serviço para ver os detalhes.</p>
+  </div>
+
+  <div class="services-grid">
+
+    <!-- CARD 1 -->
+    <div class="service-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-header-left">
+          <span class="service-icon">💡</span>
+          <h3 class="service-title">Instalação de Iluminação de Alto Padrão</h3>
+        </div>
+        <div class="card-toggle">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="service-desc">Executamos seu projeto luminotécnico com precisão milimétrica. Especialistas em soluções modernas para residências de alto padrão e comércios de luxo.</p>
+        <ul class="service-features">
+          <li>Perfis de LED – corte e instalação embutida em gesso ou marcenaria</li>
+          <li>Trilhos Eletrificados – montagem de sistemas lineares e spots de design</li>
+          <li>Automação – interruptores inteligentes e sistemas dimerizáveis</li>
+          <li>Fitas LED – colagem perfeita com luz indireta e uniforme</li>
+        </ul>
+        <a href="https://wa.me/5519992082112?text=Olá! Gostaria de um orçamento para iluminação de alto padrão." class="service-cta" target="_blank" onclick="event.stopPropagation()">Solicitar Orçamento →</a>
+      </div>
+    </div>
+
+    <!-- CARD 2 -->
+    <div class="service-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-header-left">
+          <span class="service-icon">⚡</span>
+          <h3 class="service-title">Instalações Elétricas Residenciais e Prediais</h3>
+        </div>
+        <div class="card-toggle">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="service-desc">Serviços elétricos profissionais com foco em segurança, economia e normas técnicas (NBR 5410). Desde pequenos reparos até projetos elétricos completos.</p>
+        <ul class="service-features">
+          <li>Quadros de energia, fiação, tomadas e interruptores</li>
+          <li>Projetos de iluminação LED, lustres, luminárias e refletores</li>
+          <li>Aterramento e dispositivos de proteção (DR e DPS)</li>
+          <li>Passagem de fiação, eletrodutos e organização de circuitos</li>
+        </ul>
+        <a href="https://wa.me/5519992082112?text=Olá! Gostaria de um orçamento para instalações elétricas." class="service-cta" target="_blank" onclick="event.stopPropagation()">Solicitar Orçamento →</a>
+      </div>
+    </div>
+
+    <!-- CARD 3 -->
+    <div class="service-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-header-left">
+          <span class="service-icon">🚧</span>
+          <h3 class="service-title">Instalação de Portão Eletrônico PPA – Linha Rápida</h3>
+        </div>
+        <div class="card-toggle">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="service-desc">Garanta a segurança da sua família com a tecnologia líder de mercado! Instalamos toda a linha de motores PPA, conhecidos pela durabilidade e abertura ultrarrápida.</p>
+        <ul class="service-features">
+          <li>Abertura em até 4 segundos – linha Rápida</li>
+          <li>Sistema anti-esmagamento e travamento eletrônico</li>
+          <li>Acionamento por controle remoto ou smartphone (opcional)</li>
+          <li>Motor, cremalheiras, 2 controles configurados + garantia</li>
+        </ul>
+        <a href="https://wa.me/5519992082112?text=Olá! Gostaria de um orçamento para portão eletrônico PPA." class="service-cta" target="_blank" onclick="event.stopPropagation()">Pedir Orçamento Grátis →</a>
+      </div>
+    </div>
+
+    <!-- CARD 4 -->
+    <div class="service-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-header-left">
+          <span class="service-icon">🔐</span>
+          <h3 class="service-title">Instalação de Controle de Acesso</h3>
+        </div>
+        <div class="card-toggle">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="service-desc">Diga adeus às chaves e tenha controle total de quem entra e sai! Instalamos sistemas modernos de controle de acesso para residências, empresas e condomínios.</p>
+        <ul class="service-features">
+          <li>Biometria, senha numérica, cartão/tag e reconhecimento facial</li>
+          <li>Relatórios de entradas e saídas em tempo real</li>
+          <li>Integração com alarmes e câmeras de segurança</li>
+          <li>Liberação de visitantes por aplicativo ou QR Code</li>
+          <li>Instalação completa, configuração e treinamento dos usuários</li>
+        </ul>
+        <a href="https://wa.me/5519992082112?text=Olá! Gostaria de um orçamento para Controle de Acesso." class="service-cta" target="_blank" onclick="event.stopPropagation()">Pedir Orçamento Grátis →</a>
+      </div>
+    </div>
+
+    <!-- CARD 5 -->
+    <div class="service-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-header-left">
+          <span class="service-icon">🌐</span>
+          <h3 class="service-title">Cabeamento Estruturado e Montagem de Rack</h3>
+        </div>
+        <div class="card-toggle">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="service-desc">Soluções completas em conectividade para empresas e residências. Projetamos e executamos redes organizadas, rápidas e preparadas para expansão.</p>
+        <ul class="service-features">
+          <li>Montagem e organização de racks, patch panels e switches</li>
+          <li>Instalação de pontos de rede RJ45</li>
+          <li>Identificação e certificação dos cabos</li>
+          <li>Configuração de roteadores e Access Points</li>
+          <li>Infraestrutura para redes e sistemas de CFTV IP</li>
+        </ul>
+        <a href="https://wa.me/5519992082112?text=Olá! Gostaria de um orçamento para Cabeamento Estruturado." class="service-cta" target="_blank" onclick="event.stopPropagation()">Pedir Orçamento Grátis →</a>
+      </div>
+    </div>
+
+    <!-- CARD 6 -->
+    <div class="service-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-header-left">
+          <span class="service-icon">⚡</span>
+          <h3 class="service-title">Infraestrutura Elétrica, Rede e CFTV</h3>
+        </div>
+        <div class="card-toggle">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="service-desc">Executamos toda a infraestrutura necessária para sistemas elétricos, redes de dados e CFTV, garantindo organização, segurança e alto desempenho.</p>
+        <ul class="service-features">
+          <li>Instalação de eletrodutos, canaletas e caixas de passagem</li>
+          <li>Lançamento de cabos Cat5e e Cat6</li>
+          <li>Infraestrutura para câmeras e equipamentos de segurança</li>
+          <li>Organização e separação entre cabos de energia e dados</li>
+          <li>Projetos para obras novas e reformas</li>
+        </ul>
+        <a href="https://wa.me/5519992082112?text=Olá! Gostaria de um orçamento para Infraestrutura Elétrica e Rede." class="service-cta" target="_blank" onclick="event.stopPropagation()">Pedir Orçamento Grátis →</a>
+      </div>
+    </div>
+
+    <!-- CARD 7 -->
+    <div class="service-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-header-left">
+          <span class="service-icon">📹</span>
+          <h3 class="service-title">Instalação de CFTV</h3>
+        </div>
+        <div class="card-toggle">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="service-desc">Proteja seu patrimônio com um sistema moderno de monitoramento por câmeras. Tenha acesso às imagens em tempo real de qualquer lugar.</p>
+        <ul class="service-features">
+          <li>Instalação de câmeras IP, analógicas e Wi-Fi</li>
+          <li>Visualização pelo celular, tablet ou computador</li>
+          <li>Gravação em DVR, NVR ou nuvem</li>
+          <li>Câmeras com visão noturna e alta resolução</li>
+          <li>Manutenção e reposicionamento de câmeras existentes</li>
+        </ul>
+        <a href="https://wa.me/5519992082112?text=Olá! Gostaria de um orçamento para Instalação de CFTV." class="service-cta" target="_blank" onclick="event.stopPropagation()">Pedir Orçamento Grátis →</a>
+      </div>
+    </div>
+
+    <!-- CARD 8 -->
+    <div class="service-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-header-left">
+          <span class="service-icon">🚨</span>
+          <h3 class="service-title">Instalação de Sistema de Alarme</h3>
+        </div>
+        <div class="card-toggle">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="service-desc">Instalação profissional de sistemas de alarme com proteção completa para casas, comércios e condomínios. Alarmes monitorados por aplicativo e sensores de última geração.</p>
+        <ul class="service-features">
+          <li>Proteção para residências, comércios e condomínios</li>
+          <li>Monitoramento remoto via aplicativo</li>
+          <li>Sensores de última geração</li>
+          <li>Suporte técnico especializado</li>
+        </ul>
+        <a href="https://wa.me/5519992082112?text=Olá! Gostaria de solicitar um orçamento para instalação de sistema de alarme." class="service-cta" target="_blank" onclick="event.stopPropagation()">Solicitar Orçamento →</a>
+      </div>
+    </div>
+
+    <!-- CARD 9 -->
+    <div class="service-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-header-left">
+          <span class="service-icon">🚿</span>
+          <h3 class="service-title">Instalação de Chuveiro Elétrico</h3>
+        </div>
+        <div class="card-toggle">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="service-desc">Evite riscos com instalações mal feitas e garanta um banho quente e seguro! Realizamos a instalação técnica com acabamento profissional.</p>
+        <ul class="service-features">
+          <li>Fixação do aparelho, conexão hidráulica sem vazamentos</li>
+          <li>Verificação da fiação e conectores (evita derretimentos e curtos)</li>
+          <li>Teste de funcionamento e vedação na hora</li>
+        </ul>
+        <div class="service-price">
+          R$ 170,00
+          <small>Mão de obra por unidade. Não inclui aparelho.</small>
+        </div>
+        <a href="https://wa.me/5519992082112?text=Olá! Gostaria de um orçamento para instalação de chuveiro elétrico." class="service-cta" target="_blank" onclick="event.stopPropagation()">Agendar Instalação →</a>
+      </div>
+    </div>
+
+    <!-- CARD 10 -->
+    <div class="service-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-header-left">
+          <span class="service-icon">🌀</span>
+          <h3 class="service-title">Instalação de Ventilador de Teto</h3>
+        </div>
+        <div class="card-toggle">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="service-desc">Garanta um ambiente fresco com uma instalação segura e sem barulhos indesejados! Realizamos a montagem e fixação completa do seu ventilador de teto.</p>
+        <ul class="service-features">
+          <li>Montagem de pás, motor e kit de iluminação</li>
+          <li>Fixação reforçada no teto – sem vibrações ou balanço</li>
+          <li>Instalação do capacitor e interruptor de controle de velocidade</li>
+          <li>Teste de balanceamento e todas as funções</li>
+        </ul>
+        <div class="service-price">
+          R$ 170 – R$ 250
+          <small>Varia conforme modelo e altura do pé-direito.</small>
+        </div>
+        <a href="https://wa.me/5519992082112?text=Olá! Gostaria de agendar a instalação de um ventilador de teto." class="service-cta" target="_blank" onclick="event.stopPropagation()">Agendar Instalação →</a>
+      </div>
+    </div>
+
+    <!-- CARD 11 -->
+    <div class="service-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-header-left">
+          <span class="service-icon">🔌</span>
+          <h3 class="service-title">Pontos de Rede e Cabeamento Estruturado</h3>
+        </div>
+        <div class="card-toggle">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="service-desc">Soluções completas em conectividade e infraestrutura de rede para sua empresa ou residência. Projetamos e executamos o cabeamento com foco em organização e velocidade.</p>
+        <ul class="service-features">
+          <li>Montagem, fixação e organização de Racks, Patch Panels e Switches</li>
+          <li>Instalação de pontos de rede (RJ45) para computadores, Smart TVs e impressoras</li>
+          <li>Identificação e certificação de todos os pontos e fiações</li>
+          <li>Configuração de roteadores e Access Points</li>
+          <li>Cabeamento estruturado para câmeras IP e sistemas de segurança</li>
+        </ul>
+        <a href="https://wa.me/5519992082112?text=Olá! Gostaria de solicitar um orçamento para instalação de cabeamento estruturado." class="service-cta" target="_blank" onclick="event.stopPropagation()">Solicitar Orçamento →</a>
+      </div>
+    </div>
+
+    <!-- CARD 12 -->
+    <div class="service-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-header-left">
+          <span class="service-icon">⚡</span>
+          <h3 class="service-title">Instalação de Cerca Elétrica</h3>
+        </div>
+        <div class="card-toggle">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="service-desc">Instalação e manutenção de cerca elétrica profissional. Proteja o perímetro do seu imóvel com a barreira de segurança mais eficiente do mercado.</p>
+        <ul class="service-features">
+          <li>Central de choque de alta performance – choque forte (não letal)</li>
+          <li>Hastes de alumínio ou inox com alta durabilidade</li>
+          <li>Alarme integrado: sirene dispara se o fio for cortado ou tocado</li>
+          <li>Bateria estacionária – funciona mesmo sem energia elétrica</li>
+          <li>Instalação dentro das normas técnicas e legais</li>
+        </ul>
+        <a href="https://wa.me/5519992082112?text=Olá! Gostaria de solicitar um orçamento para instalação de cerca elétrica." class="service-cta" target="_blank" onclick="event.stopPropagation()">Solicitar Orçamento →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<div class="cta-band">
+  <div class="cta-band-inner">
+    <h2>Segurança elétrica não é luxo é obrigação.</h2>
+    <p>Não arrisque a vida da sua família ou o seu patrimônio. Chame os especialistas e tenha tranquilidade.</p>
+  </div>
+</div>
+
+
 <!-- CONTACT -->
 <section id="contato" style="padding: 2rem 2rem 6rem;">
   <div style="max-width:1200px; margin:0 auto;">
@@ -1113,7 +1103,7 @@
           <div style="display:flex; align-items:center; gap:1rem;">
             <div>
               <div style="font-size:0.7rem; letter-spacing:0.1em; color:var(--yellow); text-transform:uppercase;">Atendemos</div>
-              <div style="color:var(--white); font-weight:600;">📍 Campinas e Região </div>
+              <div style="color:var(--white); font-weight:600;">📍 Campinas e Região SP</div>
             </div>
           </div>
           <div style="display:flex; align-items:center; gap:1rem;">
@@ -1166,17 +1156,16 @@
 <button class="scroll-up" id="scrollUp" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script>
-  // ─── Toggle card expand ───
+  // ─── Toggle card expand — apenas 1 aberto por vez ───
   function toggleCard(card) {
     const isExpanded = card.classList.contains('expanded');
-    // fecha todos os outros
-    document.querySelectorAll('.service-card.expanded').forEach(c => {
-      if (c !== card) c.classList.remove('expanded');
-    });
-    // alterna o clicado
-    card.classList.toggle('expanded', !isExpanded);
-    // rola para o card se acabou de abrir
+
+    // fecha TODOS os cards
+    document.querySelectorAll('.service-card').forEach(c => c.classList.remove('expanded'));
+
+    // se o clicado NÃO estava aberto, abre ele
     if (!isExpanded) {
+      card.classList.add('expanded');
       setTimeout(() => {
         card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }, 100);
@@ -1193,10 +1182,10 @@
   const observer = new IntersectionObserver(entries => {
     entries.forEach((e, i) => {
       if (e.isIntersecting) {
-        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        setTimeout(() => e.target.classList.add('visible'), i * 60);
       }
     });
-  }, { threshold: 0.1 });
+  }, { threshold: 0.05 });
   cards.forEach(c => observer.observe(c));
 
   // ─── Contador animado ───
