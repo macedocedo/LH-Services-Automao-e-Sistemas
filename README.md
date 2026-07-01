@@ -1,4 +1,4 @@
-# LH-Services-Automa-o-e-Sistemas
+# LHServices Automação e Sistemas
 
 Link: https://macedocedo.github.io/LH-Services-Automao-e-Sistemas/
 
